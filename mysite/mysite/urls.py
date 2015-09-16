@@ -19,5 +19,6 @@ from . import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^articles/', views.current_datetime),
+    url(r'^date/', views.current_datetime),
+    url(r'^test_bootstrap/', views.test_bootstrap),
 ]
