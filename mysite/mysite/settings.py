@@ -14,7 +14,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+print BASE_DIR
+#BASE_DIR = "/home/xwshi/download/bootstrap-3.3.5/dist/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -56,8 +57,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/home/xwshi/project/py/Django-study/mysite/templates/',
-          '/home/xwshi/download/bootstrap-3.3.5/docs/examples/'],
+        'DIRS': ['/home/xwshi/project/py/Django-study/mysite/templates/'], #'/home/xwshi/download/bootstrap-3.3.5/docs/examples/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,4 +101,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'), )
 STATIC_URL = '/static/'
+print STATICFILES_DIRS

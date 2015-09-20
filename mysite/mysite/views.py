@@ -12,3 +12,7 @@ def test_bootstrap(request):
   #html = open('starter-template/index.html')d
   #return HttpResponse('starter-template/index.html')
   return render_to_response('starter-template/index.html', {})
+
+def bootstrap0(request):
+  return render_to_response('bootstrap0.html', {'STATIC_URL': '/static/'})
+  #return render_to_response('starter-template/index.html', {})

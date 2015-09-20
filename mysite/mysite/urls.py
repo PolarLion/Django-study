@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^date/', views.current_datetime),
     url(r'^test_bootstrap/', views.test_bootstrap),
+    url(r'^bs0/', views.bootstrap0),
 ]
