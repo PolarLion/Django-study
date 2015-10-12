@@ -60,23 +60,21 @@ def current_datetime(request):
   #return HttpResponse(html)
   return render_to_response('current_datetime.html', {'current_date': now})
 
-def test_bootstrap(request):
-  #html = open('starter-template/index.html')d
-  #return HttpResponse('starter-template/index.html')
-  return render_to_response('starter-template/index.html', {})
-
-#import module_nmt
 
 def bootstrap0(request):
   return render_to_response('index.html', {'STATIC_URL': '/static/'})
   #return render_to_response('starter-template/index.html', {})
 
+def contact_page(request):
+  return render_to_response('contactpage.html', {'STATIC_URL': '/static/'})
+
 def nmt(request, a):
+  #return HttpResponse("ssss")
   host="127.0.0.1"
   port=8888
   s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
   s.connect((host, port))
-  ssss = "你好"
+  #ssss = "你好"
   #s.sendall(ssss)
   s.sendall(a.encode('utf-8'))
   data=s.recv(1024)                                                                                                                                                              

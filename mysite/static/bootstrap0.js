@@ -87,7 +87,47 @@ $(function() {
     document.getElementById("main-page").innerHTML=contact_main_page
   });
 });
+window.onload=function(){
+  //debugger
+  //document.getElementById("rain").innerHTML = "hehehehheeheheheh";
+  //document.getElementById("time").innerHTML = "2333";
+  var tbl=document.createElement('table');
+  var tb2=document.createElement('table');
+  //body=document.body;
+  //body.style.backgroundColor='#FFF';
+  //body.style.color='#000';
+  //body.style.fontFamily='Lucida Console';
+  for(var i = 0; i <= 6; i++){
+    var tr1 = tbl.insertRow();
+    var tr2 = tb2.insertRow();
+    for(var j = 0; j <= 15; j++){
+      var td1= tr1.insertCell();
+      var td2= tr2.insertCell();
+      td1.style.width="2%";
+      td2.style.width="2%";
+    }
+  }
+  document.getElementById("rain1").appendChild(tbl);
+  document.getElementById("rain2").appendChild(tb2);
+  setInterval(function(){
+    rain(Math.floor((Math.random()*15)),0)
+  },20);
+  //document.getElementById("rain1").innerHTML = tb1;
+}
+
+function rain(n,i) {          
+  setTimeout(function (){
+    var e=document.getElementsByTagName('tr')[i].childNodes[n];
+    e.style.color='#fff';
+    if (i < 7) e.innerHTML = '&#'+Math.floor((Math.random()*200)+0x4E00)+';';
+    else e.innerHTML = '&#'+Math.floor((Math.random()*127)+64)+';';
+    setTimeout(function(){e.style.color=''},1000)
+    if (i++ < 13) rain(n,i);
+  },20);
+};
+
 function timeFormat(){
+  //debugger
   var today = new Date();
   year = today.getFullYear(),
   month = today.getMonth() + 1,
@@ -108,5 +148,6 @@ function timeFormat(){
   //var time = year+"-"+month+"-"+day+" "+weekDay;
   document.getElementById("time").innerHTML = time;
 }
-setInterval(timeFormat,0);
 
+setInterval(timeFormat,0);
+//setInterval(matrix,1);
