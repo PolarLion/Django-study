@@ -93,6 +93,7 @@ window.onload=function(){
   //document.getElementById("time").innerHTML = "2333";
   var tbl=document.createElement('table');
   var tb2=document.createElement('table');
+  //tb1.style.color="#ff0040";
   //body=document.body;
   //body.style.backgroundColor='#FFF';
   //body.style.color='#000';
@@ -118,10 +119,10 @@ window.onload=function(){
 function rain(n,i) {          
   setTimeout(function (){
     var e=document.getElementsByTagName('tr')[i].childNodes[n];
-    e.style.color='#fff';
+    e.style.color='#f2f2f2';
     if (i < 7) e.innerHTML = '&#'+Math.floor((Math.random()*200)+0x4E00)+';';
     else e.innerHTML = '&#'+Math.floor((Math.random()*127)+64)+';';
-    setTimeout(function(){e.style.color=''},1000)
+    setTimeout(function(){e.style.color='#bdbdbd'},1000)
     if (i++ < 13) rain(n,i);
   },20);
 };
