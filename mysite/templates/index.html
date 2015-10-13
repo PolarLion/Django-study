@@ -28,10 +28,15 @@
     </div>
   </nav>
 
+
   <div class="row">
-    <div class="col-md-2 col-md-offset-5"><img src="{{STATIC_URL}}cat.png" class="img-responsive"></div>
+    <div class="col-md-4 col-md-offset-1"><span id="rain1"></span></div>
+    <div class="col-md-2"><img src="{{STATIC_URL}}cat.png" class="img-responsive"></div>
+    <div class="col-md-4"><span id="rain2"></span></div>
   </div>
   <h1><strong><p class="text-center">PolarLion</p></strong></h1>
+
+
   <div id="main-page" class="container-fluid">
     <div class="row">
       <div class="col-md-4 col-md-offset-1"><h3><strong><p class="text-left">Chinese-English Translate</p></strong></h3></div>
@@ -46,19 +51,20 @@
     </div>
 
     <div class="row">
-      <div class="col-md-2 col-md-offset-1"><h3><a id="nmt" class="button button-raised button-inverse button-block">NMT</a></h3></div>
-      <div class="col-md-2 col-md-offset-0"><h3><a id="smt" class="button button-raised button-inverse button-block">SMT</a></h3></div>
-      <div class="col-md-2 col-md-offset-4"><h3><a id="save-result" class="button button-raised button-inverse button-block">Save Result</a></a></h3></div>
+      <div class="col-md-1 col-md-offset-1"><h3><a id="nmt" class="button button-inverse">NMT</a></h3></div>
+      <div class="col-md-1 col-md-offset-0"><h3><a id="smt" class="button  button-inverse">SMT</a></h3></div>
+      <div class="col-md-2 col-md-offset-6"><h3><a id="save-result" class="button button-inverse button-right">Save Result</a></a></h3></div>
     </div>
   </div>
 
   <footer class="footer">
     <div class="container">
       <div class="row">
-        <div class="time"><h4><strong><span id="time"></span></h4></div>
+        <div class="time"><h4><p class="text-center"><strong><span id="time"></span></strong></p></h4></div>
       </div>
+      <div class="col-md-1 col-md-offset-3"><img src="{{STATIC_URL}}cat3.png" class="img-responsive"></div>
       <p>Designed and built by <a href="http://weibo.com/271900404" target="_blank">普拉狮普拉狮</a> or <a href="https://twitter.com/HeavyRainSnow" target="_blank">PolarLion</a>.</p>
-      <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+      <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
       <p id="footer-contact">see all source code <a href="#contact">click here</a>.</p>
     </div>
   </footer>

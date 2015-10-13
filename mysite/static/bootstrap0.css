@@ -5,8 +5,15 @@ html {
 body {
   padding-top: 60px;
 }
+/*.table {
+  color: #BDBDBD
+  background-color: #fff;
+}*/
+.button-right {
+  float:right
+}
 .footer {
-  text-align: center;
+  //text-align: center;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -16,7 +23,7 @@ body {
 }
 .footer p {
   margin-bottom: 0;
-  color: #777;
+  color: #555;
 }
 .footer-links {
   margin: 10px 0;
