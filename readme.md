@@ -1,6 +1,5 @@
 将下列内容保存到 wsgi.conf 文件，并将文件放在 apache 配置文件目录下 （/path/to/httpd/conf.d）
 
-
 <pre><code>
 WSGIScriptAlias /polarlion  /path/to/Django-study/mysite/mysite/wsgi.py
 WSGIPythonPath /path/to/Django-study/mysite/
