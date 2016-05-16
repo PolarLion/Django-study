@@ -43,7 +43,6 @@ if (RTCPeerConnection) (function () {
 })(); 
 
 
-
 function save_result(click_type){
   var col1 = document.getElementById("sourceinput").value;
   var col2 = document.getElementById("targetinput").value;
@@ -135,8 +134,9 @@ function show_alignment(source_text, target_text, align_list){
 
 
 $(function() {
-  var main_page = document.getElementById("main-page").innerHTML;
+  var obj = document.getElementById("languages");
 	$("#nmt").on("click", function() {
+    console.log(obj.value)
     $("#targetinput").html(decodeURI(""));
 		var source_val =document.getElementById("sourceinput").value;
     if (source_val == ''){
@@ -147,7 +147,7 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
-      source_val += '<sp>'+displayAddrs[0]
+      source_val += '<sp>'+displayAddrs[0] + '<sp>' + obj.value
   		xmlhttp.open("GET", "../nmt/" + source_val , true);
   		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
   		xmlhttp.send();
@@ -167,10 +167,9 @@ $(function() {
     }
 	});
 	$("#smt").on("click", function() {
-    //var var1=document.getElementById("sourceinput").value;
 		$("#targetinput").html(decodeURI(""));
-    var var1=document.getElementById("sourceinput").value;
-    if (var1 == ''){
+    var source_val=document.getElementById("sourceinput").value;
+    if (source_val == ''){
       document.getElementById("sourceinput").focus();
     }
     else {
@@ -178,8 +177,8 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
-      var1 += '<sp>'+displayAddrs[0]
-      xmlhttp.open("GET", "../smt/" + var1 , true);
+      source_val += '<sp>'+displayAddrs[0] + '<sp>' + obj.value
+      xmlhttp.open("GET", "../smt/" + source_val , true);
       xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       xmlhttp.send();
       xmlhttp.onreadystatechange=function() {

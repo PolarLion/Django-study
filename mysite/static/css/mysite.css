@@ -31,6 +31,15 @@ body {
 .button-right {
   float:right
 }
+
+
+.button-selext {
+  font-size:80%;
+  vertical-align:;
+
+}
+
+
 .footer {
   //text-align: center;
   position: absolute;
@@ -55,6 +64,8 @@ body {
 .footer-links li:first-child {
   padding-left: 0;
 }
+
+
 /*. {
   padding: 40px 15px;
   text-align: center;

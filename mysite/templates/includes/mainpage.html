@@ -1,48 +1,55 @@
 <div id="main-page" class="container-fluid">
+
   <div class="row">
-    <div class="col-md-2 col-md-offset-2"><h3><p class="text-left">Chinese-English Translate</p></h3></div>
-    <div class="col-md-2">
-      <select name="carlist">
-        <option value ="zh-en">Zh-En</option>
-        <option value ="zh-zh">Zh-Zh</option>
-        <option value="en-zh">En-Zh</option>
-     </select>
+    <div class="col-md-2 col-md-offset-2">
+      <h3><p class="text-left">Chinese-English Translate</p></h3>
     </div>
+
+    
   </div>
+
   <div class="row">
     <div class="col-md-4 col-md-offset-2">
-      <textarea class="form-control" id="sourceinput" placeholder="Chinese" rows="6"></textarea>
+      <textarea class="form-control" id="sourceinput" placeholder="Source language" rows="6"></textarea>
     </div>
+
+    <div class="col-md-1">
+      <select class="button button-select" id="languages">
+        <option value="zh-en" id="zh-en">Zh-En</option>
+        <option value="zh-zh" id="zh-zh">Zh-Zh</option>
+        <option value="en-zh" id="en-zh">En-Zh</option>
+      </select>
+    </div>
+
     <div class="col-md-4 col-md-offset-0">
-      <textarea class="form-control" id="targetinput" placeholder="English" rows="6" readonly></textarea>
+      <textarea class="form-control" id="targetinput" placeholder="Target language" rows="6" readonly></textarea>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-1 col-md-offset-2"><h3><a id="nmt" class="button ">NMT</a></h3></div>
-    <div class="col-md-1 col-md-offset-0"><h3><a id="smt" class="button ">SMT</a></h3></div>
+    <div class="col-md-1 col-md-offset-2"><h3><a id="nmt" class="button">NMT</a></h3></div>
+    <div class="col-md-1 col-md-offset-0"><h3><a id="smt" class="button">SMT</a></h3></div>
     <div class="col-md-1 col-md-offset-0"><h3><a id="baidu" class="button  button-baidu">............</a></h3></div>
-    <!-- <div class="col-md-1 col-md-offset-0"><h3><a id="google" class="button  button-inverse">Google</a></h3></div> -->
-    <!-- <div class="col-md-2 col-md-offset-3"><h3><a id="save-result" class="button button-primary button-right">Save Result</a></a></h3></div> -->
   </div>
+
   <div class="row">
-    <!-- <div id="main"><embed src="{{STATIC_URL}}svgtest.svg" width="300" height="100" type="image/svg+xml"  /></div> -->
     <div class="col-md-4 col-md-offset-2" id="alignment"><h3><p>Alignment matrix</p></h3></div>
 
     <div class="col-md-4 col-md-offset-0">
-      <table id="resultstable" class="table table-bordered">
-        <h3><p>History</p></h3>
-        <thead>
-        <tr>
-        <th>Source Sentence</th>
-        <th>Translated Result</th>
-        <th>Type</th>
-        <th>Time</th>
-        </tr>
-        </thead>
-        <tbody id="resultstablebody">
-        </tbody>
-      </table>
+    <table id="resultstable" class="table table-bordered">
+    <h3><p>History</p></h3>
+    <thead>
+    <tr>
+    <th>Source Sentence</th>
+    <th>Translated Result</th>
+    <th>Type</th>
+    <th>Time</th>
+    </tr>
+    </thead>
+    <tbody id="resultstablebody">
+    </tbody>
+    </table>
     </div>
   </div>
+
 </div>
