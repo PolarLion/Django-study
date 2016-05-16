@@ -1,56 +1,22 @@
 # -*- coding: utf-8 -*- 
-import logging
 
-#logging.basicConfig(level=logging.INFO,format="%(asctime)s: %(name)s: %(levelname)s: %(message)s")
-#logger = logging.getLogger(__name__)
-#logfile = logging.FileHandler("/usr/share/Django-study/mysite/views.log")
-#logfile.setFormatter(logging.Formatter("%(asctime)s: %(name)s: %(levelname)s: %(message)s"))
-#3logger.addHandler(logfile)
 
 import sys
 import socket
 
-
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-import datetime
-import time
+from untils import *
 
 
-def save_query(str_from, str_query, str_return, ttype, logfilename="query.log"):
-  logfile = open(logfilename, 'a')
-  logfile.write('\n')
-  logfile.write(str(time.strftime('%Y-%m-%d %X',time.localtime(time.time()))).strip()+'\t')
-  logfile.write("from: "+str_from+'\t')
-  logfile.write('query: '+str_query.encode('utf-8','replace')+'\t'+ttype+'\t')
-  logfile.write("return: "+str_return)
-  logfile.close()
+
 
 def index(request):
   return render_to_response('index.html', {'IMAGES_URL': '/static/images/', 'JS_URL':'/static/js/', 'CSS_URL':'/static/css/'})
   #return render_to_response('starter-template/index.html', {})
 
-def contact_page(request):
-  return render_to_response('contactpage.html', {'STATIC_URL': '/static/'})
-
-def seg(s):
-  words = s.decode("utf-8", 'replace')
-  new_line = []
-  state=0
-  for word in words:
-    ch = word.encode('utf-8')
-    # ch = word
-    if (ch.isalnum() or ch == '.') and state == 0:
-      new_line.append(ch) 
-      state = 1
-    elif state == 1 and (ch.isalnum() or ch == '.'):
-      new_line.append(ch)
-    elif ch.isspace():
-      a = 0
-    elif not ch.isalnum():
-      state = 0
-      new_line.append(ch)
-  return new_line
+def contactpage(request):
+  return render_to_response('contactpage.html', {'IMAGES_URL': '/static/images/', 'JS_URL':'/static/js/', 'CSS_URL':'/static/css/'})
 
 def nmt(request, a):
   query = a.split('<sp>')[0]
@@ -79,14 +45,6 @@ def nmt(request, a):
   save_query(str_from=ip, str_query=query, str_return=re, ttype="nmt")
   return HttpResponse(re)
   # return HttpResponse(repr(align))
-
-def post(url, data):
-  import urllib2
-  req = urllib2.Request(url)  
-  #enable cookie  
-  opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())  
-  response = opener.open(req, data)  
-  return response.read() 
 
 def smt(request, s):
   # print "request", request
