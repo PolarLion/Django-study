@@ -1,78 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PolarLion</title>
-  <link rel="shortcut icon" href="{{STATIC_URL}}cat.ico" type="image/x-icon" />
-  <!-- Bootstrap -->
-  <link href="{{STATIC_URL}}bootstrap-dist/css/bootstrap.css" rel="stylesheet">
-  <link href="{{STATIC_URL}}buttons.css" rel="stylesheet">
-  <link href="{{STATIC_URL}}bootstrap0.css" rel="stylesheet">
-</head>
+  {% include 'includes/head.html' %}
 
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="">PolarLion</a>
-      </div>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li id="nav-home" class="active"><a href="#">Home</a></li>
-          <li id="nav-contact"><a href="#contact">Contact</a></li>
-          <li><a href="https://github.com/PolarLion/Django-study" target="_blank">GitHub</a></li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div>
-  </nav>
+  {% include 'includes/navbar.html' %}
 
+  {% include 'includes/mainlogo.html' %}
 
-  <div class="row">
-    <div class="col-md-4 col-md-offset-1"><span id="rain1"></span></div>
-    <div class="col-md-2"><img src="{{STATIC_URL}}cat.png" class="img-responsive"></div>
-    <div class="col-md-4"><span id="rain2"></span></div>
-  </div>
-  <h1><strong><p class="text-center">PolarLion</p></strong></h1>
+  {% include 'includes/mainpage.html' %}
 
+  {% include 'includes/footer.html' %}
+  
 
-  <div id="main-page" class="container-fluid">
-    <div class="row">
-      <div class="col-md-4 col-md-offset-1"><h3><strong><p class="text-left">Chinese-English Translate</p></strong></h3></div>
-    </div>
-    <div class="row">
-      <div class="col-md-5 col-md-offset-1">
-        <textarea class="form-control" id="sourceinput" placeholder="Chinese" rows="6"></textarea>
-      </div>
-      <div class="col-md-5 col-md-offset-0">
-        <textarea class="form-control" id="targetinput" placeholder="English" rows="6" readonly></textarea>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-1 col-md-offset-1"><h3><a id="nmt" class="button button-inverse">NMT</a></h3></div>
-      <div class="col-md-1 col-md-offset-0"><h3><a id="smt" class="button  button-inverse">SMT</a></h3></div>
-      <div class="col-md-2 col-md-offset-6"><h3><a id="save-result" class="button button-inverse button-right">Save Result</a></a></h3></div>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="time"><h4><p class="text-center"><strong><span id="time"></span></strong></p></h4></div>
-      </div>
-      <div class="col-md-1 col-md-offset-3"><img src="{{STATIC_URL}}cat3.png" class="img-responsive"></div>
-      <p>Designed and built by <a href="http://weibo.com/271900404" target="_blank">普拉狮普拉狮</a> or <a href="https://twitter.com/HeavyRainSnow" target="_blank">PolarLion</a>.</p>
-      <p>Code licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License v2.0</a>, documentation under <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>.</p>
-      <p id="footer-contact">see all source code <a href="#contact">click here</a>.</p>
-    </div>
-  </footer>
-    
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="{{STATIC_URL}}jquery-1.11.3.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="{{STATIC_URL}}bootstrap-dist/js/bootstrap.js"></script>
-<script src="{{STATIC_URL}}bootstrap0.js"></script>
+<script src="{{STATIC_URL}}bootstrap0.js" charset="utf-8"></script>
+<script src="{{STATIC_URL}}md5.js"></script>
 </body>
 </html>
