@@ -26,16 +26,8 @@ def save_query(str_from, str_query, str_return, ttype, logfilename="query.log"):
   logfile.write("return: "+str_return)
   logfile.close()
 
-
-def current_datetime(request):
-  now = datetime.datetime.now()
-  #html = "<html><body>It is now %s.</body></html>" % now
-  #return HttpResponse(html)
-  return render_to_response('current_datetime.html', {'current_date': now})
-
-
-def bootstrap0(request):
-  return render_to_response('index.html', {'STATIC_URL': '/static/'})
+def index(request):
+  return render_to_response('index.html', {'IMAGES_URL': '/static/images/', 'JS_URL':'/static/js/', 'CSS_URL':'/static/css/'})
   #return render_to_response('starter-template/index.html', {})
 
 def contact_page(request):
@@ -148,13 +140,4 @@ def smt(request, s):
   return HttpResponse(re)
 
 
-# def baidu_sign(request, query):
-#   import md5
-#   text = "20160409000018151"+query+"19900404"+"E0ZOUoKvwIEwNELiR0lJ"
-#   m = md5.new()
-#   m.update(text.encode('utf-8'))
-#   return HttpResponse(str(m.hexdigest()))
-  # return HttpResponse(text)
-  # return HttpResponse(query)
 
-#print translateserver.translate("输 出")

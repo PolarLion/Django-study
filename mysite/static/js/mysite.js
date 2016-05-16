@@ -19,7 +19,6 @@ var contact_main_page="\
   </div>\
 "
 
-
 var RTCPeerConnection =  window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 var displayAddrs;
 if (RTCPeerConnection) (function () {
