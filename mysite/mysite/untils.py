@@ -4,9 +4,7 @@ import time
 
 
 
-
-
-def save_query(str_from, str_query, str_return, ttype, logfilename="query.log"):
+def save_query(ttype, str_from="error", str_query="error", str_return="error", logfilename="query.log"):
   logfile = open(logfilename, 'a')
   logfile.write('\n')
   logfile.write(str(time.strftime('%Y-%m-%d %X',time.localtime(time.time()))).strip()+'\t')

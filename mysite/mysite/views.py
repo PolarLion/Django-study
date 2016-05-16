@@ -19,18 +19,21 @@ def contactpage(request):
   return render_to_response('contactpage.html', {'IMAGES_URL': '/static/images/', 'JS_URL':'/static/js/', 'CSS_URL':'/static/css/'})
 
 def nmt(request, a):
-  query = a.split('<sp>')[0]
-  # print "!!!!!!", a
-  ip = a.split('<sp>')[1]
-  #return HttpResponse("ssss")
+  struct = a.split('<sp>')
+  if len(struct) < 2:
+    save_query(ttype="nmt")
+    return HttpResponse("")
+  query = struct[0]
+  ip = struct[1]
+
   host="127.0.0.1"
   port=8888
   s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
   s.connect((host, port))
 
-
   if query == '':
     s.close()
+    save_query(ttype="nmt", str_from=ip, str_query=query)
     return HttpResponse("")
   source = query.encode('utf-8')
   s.sendall(source)
@@ -40,27 +43,29 @@ def nmt(request, a):
   align.append(target)
   align.append(seg(source))
   print align
-  # print "data", data
   re = repr(align).replace('\\x','%')
   save_query(str_from=ip, str_query=query, str_return=re, ttype="nmt")
   return HttpResponse(re)
-  # return HttpResponse(repr(align))
 
-def smt(request, s):
-  # print "request", request
-  query = s.split('<sp>')[0]
-  ip = s.split('<sp>')[1]
+def smt(request, a):
+  struct = a.split('<sp>')
+  if len(struct) < 2:
+    save_query(ttype="nmt")
+    return HttpResponse("")
+  query = struct[0]
+  ip = struct[1]
+
   import re
   import copy
   src = seg(query.encode('utf-8','replace'))
   new_line = ' '.join(src).strip()
-  # print "!!!!!!!!!!!!!!!!!", a
+
   data = "<methodCall><methodName>translate</methodName><params><param><value><struct><member><name>text</name><value><string>"+new_line+"</string></value></member><member><name>align</name><value><string>1</string></value></member></struct></value></param></params></methodCall>"
 
   r = post("http://0.0.0.0:9999/RPC2", data)
   text=""
   print type(r), r
-  # r = requests.post("http://0.0.0.0:9999/RPC2", data=data)
+
   p1 = re.compile(r'(?:(.|\n)*?)<string>(.*?)</string>(?:(.|\n)*)')
   p2 = re.compile(r'\s*\|\d+-\d+\|\s*')
   p3 = re.compile(r'\|(\d+)-(\d+)\|\s*')
@@ -96,6 +101,4 @@ def smt(request, s):
   re = repr(align).replace('\\x','%')
   save_query(str_from=ip, str_query=query, str_return=re, ttype="smt")
   return HttpResponse(re)
-
-
 
