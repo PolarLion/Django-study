@@ -57,7 +57,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/usr/share/Django-study/mysite/templates/'], #'/home/xwshi/download/bootstrap-3.3.5/docs/examples/'],
+        'DIRS': ['/home/xwshi/project/py/Django-study/mysite/templates/'], #'/home/xwshi/download/bootstrap-3.3.5/docs/examples/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

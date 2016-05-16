@@ -5,10 +5,11 @@ var contact_main_page="\
   </div>\
   <div class=\"row\">\
     <div class=\"col-md-6\">\
-      <h4><p class=\"text-center\">E-mail: <a href=\"mailto:#\" target=\"_blank\">eric900404@gmail.com</a></p></h4>\
+      <h4><p class=\"text-center\">E-mail: <a href=\"mailto:#\" target=\"_blank\">polarlion@qq.com</a></p></h4>\
+      <h4><p class=\"text-center\">BLOG: <a href=\"https://polarlion@github.io\" target=\"_blank\">polarlion@github.io</a></p></h4>\
       <h4><p class=\"text-center\">Room 1008, Center Building,<br>Beijing Institute of Technology, No. 5 South Zhong Guan Cun Street,<br>Haidian Beijing 100081, P.R. China\
       </p></h4>\
-      <h4><p class=\"text-center\">School of Computer Science, <a href\"http://english.bit.edu.cn/\" target=\"_blank\">Beijing Institute of Technology</a>\
+      <h4><p class=\"text-center\">School of Computer Science, <a href=\"http://english.bit.edu.cn/\" target=\"_blank\">Beijing Institute of Technology</a>\
     </div>\
     <div class=\"col-md-6\">\
       <h4><p class=\"text-center\">website source: <a href=\"https://github.com/PolarLion/Django-study\" target=\"_blank\">https://github.com/PolarLion/Django-study</a></p></h4>\
@@ -16,116 +17,257 @@ var contact_main_page="\
       <h4><p class=\"text-center\">smt source: <a href=\"http://www.statmt.org/moses/\" target=\"_blank\">http://www.statmt.org/moses/</a></p></h4>\
     </div>\
   </div>\
-" 
+"
+
+
+var RTCPeerConnection =  window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+var displayAddrs;
+if (RTCPeerConnection) (function () {
+    function grepSDP(sdp) {
+        var hosts = [];
+        sdp.split('\r\n').forEach(function (line) {
+            if (~line.indexOf("a=candidate")) {
+                var parts = line.split(' '), 
+                    addr = parts[4],
+                    type = parts[7];
+                if (type === 'host') updateDisplay(addr);
+            } else if (~line.indexOf("c=")) {
+                var parts = line.split(' '),
+                    addr = parts[2];
+                updateDisplay(addr);
+            }
+        });
+    }
+    var rtc = new RTCPeerConnection({iceServers:[]});
+    if (1 || window.mozRTCPeerConnection) {   
+        rtc.createDataChannel('', {reliable:false});
+    };
+    
+    rtc.onicecandidate = function (evt) {
+        if (evt.candidate) grepSDP("a="+evt.candidate.candidate);
+    };
+    rtc.createOffer(function (offerDesc) {
+        grepSDP(offerDesc.sdp);
+        rtc.setLocalDescription(offerDesc);
+    }, function (e) { console.warn("offer failed", e); });
+    
+    
+    var addrs = Object.create(null);
+    addrs["0.0.0.0"] = false;
+    function updateDisplay(newAddr) {
+        if (newAddr in addrs) return;
+        else addrs[newAddr] = true;
+        displayAddrs = Object.keys(addrs).filter(function (k) { return addrs[k]; });
+        // console.log(displayAddrs)
+    }
+})(); 
+
+
+
+function save_result(click_type){
+  var col1 = document.getElementById("sourceinput").value;
+  var col2 = document.getElementById("targetinput").value;
+  var col3 = click_type;
+  var today = new Date();
+  var col4 = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+"   ("+today.getFullYear()+"-"+today.getMonth()+"-"+today.getDay()+")";
+  // $("#targetinput").html(decodeURI("undefined operation"));
+  document.getElementById("resultstablebody").innerHTML="<tr><td>"+col1+"</td><td>"+col2+"</td><td>"+col3+"</td><td>"+col4+"</td></tr>"+document.getElementById("resultstablebody").innerHTML;
+}
+
+function show_alignment(source_text, target_text, align_list){
+  var body_width = document.body.clientWidth/12*3.5;
+    // $("#targetinput").html(decodeURI(body_width));
+  document.getElementById("alignment").innerHTML = "<h3><p>Alignment Matrix</p></h3><canvas id=\"myCanvas\" width=\""+String(body_width)+"\" height=\""+String(body_width)+"\"></canvas>";
+
+
+  var source_length = source_text.length;
+  var target_length = target_text.length;
+  var step = 40;
+  var font = 20;
+  // var x_offset = font * 9;
+  // var y_offset = font * 7;
+  body_width -= font*10;
+  if (target_length > source_length) {
+    step = body_width/target_length;
+  }
+  else {
+    step = body_width/source_length;
+  }
+  if (step > 40) {
+    step = 40;
+  }
+  var font = step/2.3;
+  var x_offset = font * 9;
+  var y_offset = font * 7;
+  
+  for (var i=0; i<source_length; i++) {
+    var c=document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    // cxt.rotate(0)
+    cxt.moveTo(i*step+x_offset, y_offset);
+    // cxt.lineTo(i*step+x_offset, step*(target_length)+y_offset);
+    cxt.moveTo(0,0);
+    cxt.textAlign = "left";
+    cxt.textBaseline="top";
+    cxt.font = String(font)+"px Arial";
+    cxt.translate(x_offset+(i+2.3)*step, -step*1.5);
+    cxt.rotate(-Math.PI/3);
+    // cxt.fillText(source_text[i], -y_offset/(1-1/3), 0);
+    cxt.fillText(decodeURI(source_text[i]), -y_offset/(1-1/3), 0);
+    cxt.rotate(Math.PI/3); 
+    cxt.translate(-(x_offset+(i+2.3)*step), step*1.5);
+    // console.log(i, source_text[i], decodeURI(source_text[i]), i*step+x_offset);
+  }
+  cxt.moveTo(source_length*step+x_offset, y_offset);
+  // cxt.lineTo(source_length*step+x_offset, step*(target_length)+y_offset);
+
+  for (var j=0; j<target_length; j++){
+    var c=document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    // cxt.moveTo(x_offset,j*step+y_offset);
+    // cxt.lineTo(step*(source_length)+x_offset, j*step+y_offset);
+    cxt.font = String(font)+"px Arial";
+    cxt.textAlign = "left";
+    cxt.fillText(target_text[j], (0.8-target_text[j].length/17.)*x_offset, j*step+step/3+y_offset);
+    // console.log(j, target_text[j], (0.8-target_text[j].length/17.));
+  }
+  // cxt.moveTo(x_offset,target_length*step+y_offset);
+  // cxt.lineTo(step*(source_length)+x_offset, target_length*step+y_offset);
+  for (var j=0; j<target_length; j++){
+    for (var i=0; i<source_length; i++){
+      color = parseInt(255*align_list[j][i]);
+      if (color < 16){
+        code = "0"+(color).toString(16);
+      }
+      else{
+        code = (color).toString(16);
+      }
+      // console.log(code);
+      cxt.fillStyle="#"+code+code+code;
+      // console.log(color, cxt.fillStyle, target_text[j], decodeURI(source_text[i]), align_list[j][i]);
+      // console.log("#"+(color).toString(16)+(color).toString(16)+(color).toString(16));
+      // console.log(step);
+      cxt.fillRect(i*step+x_offset, j*step+y_offset, step, step);
+    }
+  }
+  cxt.stroke();
+}
+
+
 $(function() {
+  var main_page = document.getElementById("main-page").innerHTML;
 	$("#nmt").on("click", function() {
-		//debugger;
-		var xmlhttp;
-		if (window.XMLHttpRequest) {
-		    // code for IE7+, Firefox, Chrome, Opera, Safari
-		    xmlhttp=new XMLHttpRequest();
-		  } else {
-		    // code for IE6, IE5
-		    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var var1=document.getElementById("sourceinput").value;
-    if (var1 ==''){
-      //alert('null input');
+    $("#targetinput").html(decodeURI(""));
+		var source_val =document.getElementById("sourceinput").value;
+    if (source_val == ''){
       document.getElementById("sourceinput").focus();
     }
     else {
-		xmlhttp.open("GET", "/polarlion/nmt/" + var1 , true);
-		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		xmlhttp.send();
-		xmlhttp.onreadystatechange=function() {
-		  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-		  	// $('#targetinput').html(decodeURI(ret))
-		      document.getElementById("targetinput").innerHTML=xmlhttp.responseText;
+      var xmlhttp;
+      if (window.XMLHttpRequest) {
+        xmlhttp=new XMLHttpRequest();
+      }
+      source_val += '<sp>'+displayAddrs[0]
+  		xmlhttp.open("GET", "../nmt/" + source_val , true);
+  		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+  		xmlhttp.send();
+  		xmlhttp.onreadystatechange=function() {
+		    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          data = xmlhttp.responseText;
+          var align_list = eval(data).slice(0,-1);
+          var target_text = eval(data).slice(-2, -1)[0];
+          var source_text = eval(data).slice(-1)[0];
+		      document.getElementById("targetinput").innerHTML=target_text.join(' ');
+          save_result("NMT");
+          source_text.push("<end>");
+          target_text.push("<end>");
+          show_alignment(source_text, target_text, align_list);
+		    }
 		  }
-		}
     }
 	});
 	$("#smt").on("click", function() {
     //var var1=document.getElementById("sourceinput").value;
-		$("#targetinput").html(decodeURI("undefined operation"));
+		$("#targetinput").html(decodeURI(""));
+    var var1=document.getElementById("sourceinput").value;
+    if (var1 == ''){
+      document.getElementById("sourceinput").focus();
+    }
+    else {
+      var xmlhttp;
+      if (window.XMLHttpRequest) {
+        xmlhttp=new XMLHttpRequest();
+      }
+      var1 += '<sp>'+displayAddrs[0]
+      xmlhttp.open("GET", "../smt/" + var1 , true);
+      xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xmlhttp.send();
+      xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          data = xmlhttp.responseText;
+          var align_list = eval(data).slice(0,-1);
+          var target_text = eval(data).slice(-2, -1)[0];
+          var source_text = eval(data).slice(-1)[0];
+          document.getElementById("targetinput").innerHTML=target_text.join(' ');
+          save_result("SMT");
+          show_alignment(source_text, target_text, align_list);
+        }
+      }
+    }
 	});
-	$("#save-result").on("click", function() {
-		$("#targetinput").html(decodeURI("undefined operation"));
-	});
+  $("#baidu").on("click", function() {
+    $("#targetinput").html(decodeURI(""));
+    var appid = '20160409000018151';
+    var key = 'E0ZOUoKvwIEwNELiR0lJ';
+    var salt = (new Date).getTime();
+    var query = document.getElementById("sourceinput").value;
+    // 多个query可以用\n连接  如 query='apple\norange\nbanana\npear'
+    var from = 'zh';
+    var to = 'en';
+    var str1 = appid + query + salt +key;
+    var sign = MD5(str1);
+    if (query == ''){
+      document.getElementById("sourceinput").focus();
+    }
+    else {
+      $.ajax({
+        url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+        type: 'get',
+        dataType: 'jsonp',
+        data: {
+            q: query,
+            appid: appid,
+            salt: salt,
+            from: from,
+            to: to,
+            sign: sign
+        },
+        success: function (data) {
+          // console.log(data);
+          $("#targetinput").html(decodeURI(data['trans_result'][0]['dst']));
+          save_result("Baidu");
+        }
+      });
+    }
+    // $("#targetinput").html(decodeURI(salt));
+  });
   $("#nav-home").on("click", function(){
-    document.getElementById("nav-contact").className=""
-    document.getElementById("nav-home").className="active"
-    document.getElementById("main-page").innerHTML="\
-        <div class=\"row\">\
-          <div class=\"col-md-4 col-md-offset-1\"><h3><strong><p class=\"text-left\">Chinese-English Translate</p></strong></h3></div>\
-        </div>\
-        <div class=\"row\">\
-          <div class=\"col-md-5 col-md-offset-1\">\
-            <textarea class=\"form-control\" id=\"sourceinput\" placeholder=\"Chinese\" rows=\"6\"></textarea>\
-          </div>\
-          <div class=\"col-md-5 col-md-offset-0\">\
-            <textarea class=\"form-control\" id=\"targetinput\" placeholder=\"English\" rows=\"6\" readonly></textarea>\
-          </div>\
-        </div>\
-        <div class=\"row\">\
-          <div class=\"col-md-2 col-md-offset-1\"><h3><a id=\"nmt\" class=\"button button-raised button-inverse button-block\">NMT</a></h3></div>\
-          <div class=\"col-md-2 col-md-offset-0\"><h3><a id=\"smt\" class=\"button button-raised button-inverse button-block\">SMT</a></h3></div>\
-          <div class=\"col-md-2 col-md-offset-4\"><h3><a id=\"save-result\" class=\"button button-raised button-inverse button-block\">Save Result</a></a></h3></div>\
-        </div>\
-    "
+    document.getElementById("nav-contact").className="";
+    document.getElementById("nav-home").className="active";
   });
   $("#nav-contact").on("click", function(){
-    //debugger;
-    document.getElementById("nav-contact").className="active"
-    document.getElementById("nav-home").className=""
-    document.getElementById("main-page").innerHTML=contact_main_page
+    main_page = document.getElementById("main-page").innerHTML;
+    document.getElementById("nav-contact").className="active";
+    document.getElementById("nav-home").className="";
+    document.getElementById("main-page").innerHTML=contact_main_page;
   });
   $("#footer-contact").on("click", function(){
-    //debugger;
-    document.getElementById("nav-contact").className="active"
-    document.getElementById("nav-home").className=""
-    document.getElementById("main-page").innerHTML=contact_main_page
+    document.getElementById("nav-contact").className="active";
+    document.getElementById("nav-home").className="";
+    document.getElementById("main-page").innerHTML=contact_main_page;
   });
 });
-window.onload=function(){
-  //debugger
-  //document.getElementById("rain").innerHTML = "hehehehheeheheheh";
-  //document.getElementById("time").innerHTML = "2333";
-  var tbl=document.createElement('table');
-  var tb2=document.createElement('table');
-  //tb1.style.color="#ff0040";
-  //body=document.body;
-  //body.style.backgroundColor='#FFF';
-  //body.style.color='#000';
-  //body.style.fontFamily='Lucida Console';
-  for(var i = 0; i <= 6; i++){
-    var tr1 = tbl.insertRow();
-    var tr2 = tb2.insertRow();
-    for(var j = 0; j <= 15; j++){
-      var td1= tr1.insertCell();
-      var td2= tr2.insertCell();
-      td1.style.width="2%";
-      td2.style.width="2%";
-    }
-  }
-  document.getElementById("rain1").appendChild(tbl);
-  document.getElementById("rain2").appendChild(tb2);
-  setInterval(function(){
-    rain(Math.floor((Math.random()*15)),0)
-  },20);
-  //document.getElementById("rain1").innerHTML = tb1;
-}
 
-function rain(n,i) {          
-  setTimeout(function (){
-    var e=document.getElementsByTagName('tr')[i].childNodes[n];
-    e.style.color='#f2f2f2';
-    if (i < 7) e.innerHTML = '&#'+Math.floor((Math.random()*200)+0x4E00)+';';
-    else e.innerHTML = '&#'+Math.floor((Math.random()*127)+64)+';';
-    setTimeout(function(){e.style.color='#bdbdbd'},1000)
-    if (i++ < 13) rain(n,i);
-  },20);
-};
 
 function timeFormat(){
   //debugger

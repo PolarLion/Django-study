@@ -9,12 +9,32 @@ body {
   color: #BDBDBD
   background-color: #fff;
 }*/
+.cat-image {
+  position:center;
+}
+
+.button-compact{
+  font-size:80%;
+  /*margin: 0pc, 5px, 0pc, 0px;*/
+}
+.button-baidu {
+  background-color: transparent;
+  color:transparent;
+  background-image: url(baidu.png);
+  background-repeat: no-repeat;
+}
+
+.table {
+  min-height: 100%;
+  position: relative;
+}
 .button-right {
   float:right
 }
 .footer {
   //text-align: center;
   position: absolute;
+  /*position: relative;*/
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
