@@ -3,16 +3,17 @@
 import time
 import socket
 
-
+SEPARATOR='<sp>'
 
 def save_query(ttype, languages="error", str_from="error", str_query="error", str_return="error", logfilename="query.log"):
   logfile = open(logfilename, 'a')
   logfile.write('\n')
   logfile.write(str(time.strftime('%Y-%m-%d %X',time.localtime(time.time()))).strip()+'\t')
   logfile.write("from: "+str_from+'\t')
-  logfile.write('query: '+str_query.encode('utf-8','replace')+'\t'+languages+'\t'+ttype+'\t')
+  logfile.write('query: '+str_query+'\t'+languages+'\t'+ttype+'\t')
   logfile.write("return: "+str_return)
   logfile.close()
+
 
 def seg(s):
   words = s.decode("utf-8", 'replace')
@@ -44,24 +45,23 @@ def post(url, data):
 
 
 def nmt_caller(query, ip, languages):
-  nmt_server = {"zh-en":("127.0.0.1", 8888), }
-  s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-  s.connect(nmt_server[languages])
-
   if query == '':
-    s.close()
     save_query(ttype="nmt", str_from=ip, str_query=query)
     return ""
-  source = query.encode('utf-8')
-  s.sendall(source)
+
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.connect(("127.0.0.1", 8888))
+
+  s.sendall(query+SEPARATOR+languages)
   data=s.recv(100000)
-  target, align = eval(data)
   s.close()
+
+  source, target, align = eval(data)
   align.append(target)
-  align.append(seg(source))
+  align.append(source.split(' '))
   print align
   re = repr(align).replace('\\x','%')
-  save_query(str_from=ip, str_query=query, str_return=re, languages="zh-en", ttype="nmt")
+  save_query(str_from=ip, str_query=source, str_return=re, languages="zh-en", ttype="nmt")
   return re
 
 def smt_caller(query, ip, languages):
@@ -69,7 +69,7 @@ def smt_caller(query, ip, languages):
   
   import re
   import copy
-  src = seg(query.encode('utf-8','replace'))
+  src = seg(query)
   new_line = ' '.join(src).strip()
 
   data = "<methodCall><methodName>translate</methodName><params><param><value><struct><member><name>text</name><value><string>"+new_line+"</string></value></member><member><name>align</name><value><string>1</string></value></member></struct></value></param></params></methodCall>"
