@@ -5,7 +5,7 @@ import socket
 
 SEPARATOR='<sp>'
 
-def save_query(ttype, languages="error", str_from="error", str_query="error", str_return="error", logfilename="query.log"):
+def save_query(ttype, languages="error", str_from="error", str_query="error", str_return="error", logfilename="/home/xwshi/project/py/Django-study/mysite/query.log"):
   logfile = open(logfilename, 'a')
   logfile.write('\n')
   logfile.write(str(time.strftime('%Y-%m-%d %X',time.localtime(time.time()))).strip()+'\t')
@@ -59,9 +59,10 @@ def nmt_caller(query, ip, languages):
   source, target, align = eval(data)
   align.append(target)
   align.append(source.split(' '))
-  print align
+  print "align", align
+  print "target", target
   re = repr(align).replace('\\x','%')
-  save_query(str_from=ip, str_query=source, str_return=re, languages="zh-en", ttype="nmt")
+  save_query(str_from=ip, str_query=source, str_return=re, languages=languages, ttype="nmt")
   return re
 
 def smt_caller(query, ip, languages):
@@ -110,7 +111,7 @@ def smt_caller(query, ip, languages):
   align.append(src)
   print align
   re = repr(align).replace('\\x','%')
-  save_query(str_from=ip, str_query=query, languages="zh-en", str_return=re, ttype="smt")
+  save_query(str_from=ip, str_query=query, languages=languages, str_return=re, ttype="smt")
   return re
 
 
