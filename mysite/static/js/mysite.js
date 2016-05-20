@@ -107,8 +107,8 @@ function show_alignment(source_text, target_text, align_list){
     // cxt.lineTo(step*(source_length)+x_offset, j*step+y_offset);
     cxt.font = String(font)+"px Arial";
     cxt.textAlign = "left";
-    cxt.fillText(target_text[j], (0.8-target_text[j].length/17.)*x_offset, j*step+step/3+y_offset);
-    // console.log(j, target_text[j], (0.8-target_text[j].length/17.));
+    cxt.fillText(decodeURI(target_text[j]), (0.8-decodeURI(target_text[j]).length/17.)*x_offset, j*step+step/3+y_offset);
+    console.log(j, target_text[j], decodeURI(target_text[j]), (0.8-decodeURI(target_text[j]).length/17.));
   }
   // cxt.moveTo(x_offset,target_length*step+y_offset);
   // cxt.lineTo(step*(source_length)+x_offset, target_length*step+y_offset);
@@ -157,7 +157,7 @@ $(function() {
           var align_list = eval(data).slice(0,-1);
           var target_text = eval(data).slice(-2, -1)[0];
           var source_text = eval(data).slice(-1)[0];
-		      document.getElementById("targetinput").innerHTML=target_text.join(' ');
+		      document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(' '));
           save_result("NMT");
           source_text.push("<end>");
           target_text.push("<end>");
