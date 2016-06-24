@@ -43,14 +43,15 @@ if (RTCPeerConnection) (function () {
 })(); 
 
 
-function save_result(click_type){
+function save_result(click_type, languages){
   var col1 = document.getElementById("sourceinput").value;
   var col2 = document.getElementById("targetinput").value;
   var col3 = click_type;
+  var col4 = languages
   var today = new Date();
-  var col4 = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+"   ("+today.getFullYear()+"-"+today.getMonth()+"-"+today.getDay()+")";
+  var col5 = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+"   ("+today.getFullYear()+"-"+today.getMonth()+"-"+today.getDay()+")";
   // $("#targetinput").html(decodeURI("undefined operation"));
-  document.getElementById("resultstablebody").innerHTML="<tr><td>"+col1+"</td><td>"+col2+"</td><td>"+col3+"</td><td>"+col4+"</td></tr>"+document.getElementById("resultstablebody").innerHTML;
+  document.getElementById("resultstablebody").innerHTML="<tr><td>"+col1+"</td><td>"+col2+"</td><td>"+col3+"</td><td>"+col4+"</td><td>"+col5+"</td></tr>"+document.getElementById("resultstablebody").innerHTML;
 }
 
 function show_alignment(source_text, target_text, align_list){
@@ -114,7 +115,11 @@ function show_alignment(source_text, target_text, align_list){
   // cxt.lineTo(step*(source_length)+x_offset, target_length*step+y_offset);
   for (var j=0; j<target_length; j++){
     for (var i=0; i<source_length; i++){
-      color = parseInt(255*align_list[j][i]);
+      wa = align_list[j][i]
+      if (wa < 0.1) {
+        wa = 0.
+      }
+      color = parseInt(255*wa);
       if (color < 16){
         code = "0"+(color).toString(16);
       }
@@ -134,9 +139,9 @@ function show_alignment(source_text, target_text, align_list){
 
 
 $(function() {
-  var obj = document.getElementById("languages");
+  var languages = document.getElementById("languages");
 	$("#nmt").on("click", function() {
-    console.log(obj.value)
+    console.log(languages.value)
     $("#targetinput").html(decodeURI(""));
 		var source_val =document.getElementById("sourceinput").value;
     if (source_val == ''){
@@ -147,7 +152,7 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
-      source_val += '<sp>'+displayAddrs[0] + '<sp>' + obj.value
+      source_val += '<sp>'+displayAddrs[0] + '<sp>' + languages.value
   		xmlhttp.open("GET", "../nmt/" + source_val , true);
   		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
   		xmlhttp.send();
@@ -158,7 +163,7 @@ $(function() {
           var target_text = eval(data).slice(-2, -1)[0];
           var source_text = eval(data).slice(-1)[0];
 		      document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(' '));
-          save_result("NMT");
+          save_result("NMT", languages.value);
           source_text.push("<end>");
           target_text.push("<end>");
           show_alignment(source_text, target_text, align_list);
@@ -177,7 +182,7 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
-      source_val += '<sp>'+displayAddrs[0] + '<sp>' + obj.value
+      source_val += '<sp>'+displayAddrs[0] + '<sp>' + languages.value
       xmlhttp.open("GET", "../smt/" + source_val , true);
       xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       xmlhttp.send();
@@ -188,7 +193,7 @@ $(function() {
           var target_text = eval(data).slice(-2, -1)[0];
           var source_text = eval(data).slice(-1)[0];
           document.getElementById("targetinput").innerHTML=target_text.join(' ');
-          save_result("SMT");
+          save_result("SMT", languages.value);
           show_alignment(source_text, target_text, align_list);
         }
       }
@@ -201,8 +206,22 @@ $(function() {
     var salt = (new Date).getTime();
     var query = document.getElementById("sourceinput").value;
     // 多个query可以用\n连接  如 query='apple\norange\nbanana\npear'
-    var from = 'zh';
-    var to = 'en';
+    var from = '';
+    var to = '';
+    console.log(languages.value)
+    if (languages.value=="zh-en") {
+      from = 'zh';
+      to = 'en';
+    }
+    else if (languages.value=="en-zh"){
+      from = 'en';
+      to = 'zh';
+    }
+    else if (languages.value=="zh-zh"){
+      from = 'zh';
+      to = 'zh';
+    }
+    
     var str1 = appid + query + salt +key;
     var sign = MD5(str1);
     if (query == ''){
@@ -224,7 +243,8 @@ $(function() {
         success: function (data) {
           // console.log(data);
           $("#targetinput").html(decodeURI(data['trans_result'][0]['dst']));
-          save_result("Baidu");
+          save_result("Baidu", languages.value);
+          document.getElementById("alignment").innerHTML = ""
         }
       });
     }
