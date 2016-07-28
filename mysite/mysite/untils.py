@@ -2,6 +2,9 @@
 
 import time
 import socket
+import commands
+
+
 
 SEPARATOR='<sp>'
 
@@ -70,23 +73,36 @@ def smt_caller(query, ip, languages):
   
   import re
   import copy
-  src = seg(query)
-  new_line = ' '.join(src).strip()
-
-  data = "<methodCall><methodName>translate</methodName><params><param><value><struct><member><name>text</name><value><string>"+new_line+"</string></value></member><member><name>align</name><value><string>1</string></value></member></struct></value></param></params></methodCall>"
-
-  r = post(smt_server[languages], data)
-  text=""
-  print type(r), r
+  
+  src = ['']
 
   p1 = re.compile(r'(?:(.|\n)*?)<string>(.*?)</string>(?:(.|\n)*)')
   p2 = re.compile(r'\s*\|\d+-\d+\|\s*')
   p3 = re.compile(r'\|(\d+)-(\d+)\|\s*')
-  m1 = p1.findall(r)
-  
-  if len(m1)>0:
-    text = m1[0][1]
+  if languages == "zh-en":
+    src = seg(query)
+    new_line = ' '.join(src).strip()
+    data = "<methodCall><methodName>translate</methodName><params><param><value><struct><member><name>text</name><value><string>"+new_line+"</string></value></member><member><name>align</name><value><string>1</string></value></member></struct></value></param></params></methodCall>"
+
+    r = post(smt_server[languages], data)
+    text=""
+    print type(r), r
+    
+    m1 = p1.findall(r)
+    if len(m1)>0:
+      text = m1[0][1]
+      print "text", text
     # print text
+  elif languages == "en-zh":
+    src = new_query.split(' ')
+    print "untils.py en-zh src", src
+    # print "en-zh"
+    string = "echo \""+query+"\" | nc 127.0.0.1 3120"
+    print string
+    (num, text) = commands.getstatusoutput(string)
+
+    print text
+
   m2 = p2.split(text)
   m2 = m2[:-1]
   m3 = p3.findall(text)
