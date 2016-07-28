@@ -16,8 +16,10 @@ def contactpage(request):
   return render_to_response('contactpage.html', {'IMAGES_URL': '/static/images/', 'JS_URL':'/static/js/', 'CSS_URL':'/static/css/'})
 
 def nmt(request, a):
+  # print "views.py a", a
+  a = a.replace('^', '?')
   struct = a.split(SEPARATOR)
-  print struct
+  print "views.py struct", struct
   if len(struct) < 3:
     save_query(ttype="nmt")
     return HttpResponse("")
@@ -32,6 +34,7 @@ def nmt(request, a):
   
 
 def smt(request, a):
+  a = a.replace('^', '?')
   struct = a.split('<sp>')
   print struct
   if len(struct) < 3:
@@ -42,5 +45,5 @@ def smt(request, a):
   ip = struct[1].encode('ascii', 'replace')
   languages = struct[2].encode('ascii', 'replace')
 
-  return HttpResponse(smt_caller(query, ip, languages))
+  return HttpResponse(smt_caller(query, ip, languages.encode('ascii', 'replace')))
 
