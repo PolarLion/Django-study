@@ -94,10 +94,18 @@ def smt_caller(query, ip, languages):
       print "text", text
     # print text
   elif languages == "en-zh":
-    src = new_query.split(' ')
-    print "untils.py en-zh src", src
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect(("127.0.0.1", 8888))
+
+    s.sendall(query+SEPARATOR+languages)
+    data=s.recv(100000)
+    s.close()
+
+    source, _, _, = eval(data)
+    src = source.split(' ')
+    # print "untils.py en-zh src", src
     # print "en-zh"
-    string = "echo \""+query+"\" | nc 127.0.0.1 3120"
+    string = "echo \""+source+"\" | nc 127.0.0.1 3120"
     print string
     (num, text) = commands.getstatusoutput(string)
 
