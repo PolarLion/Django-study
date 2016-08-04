@@ -33,10 +33,10 @@ body {
 }
 
 
-.button-selext {
-  font-size:80%;
-  vertical-align:;
-
+.button-select {
+  font-size:100%;
+  padding-left: 17%;
+  padding-right: 17%;
 }
 
 
