@@ -42,6 +42,10 @@ if (RTCPeerConnection) (function () {
     }
 })(); 
 
+var global_align_list;
+var global_target_text;
+var global_source_text;
+
 
 function save_result(click_type, languages){
   var col1 = document.getElementById("sourceinput").value;
@@ -49,7 +53,7 @@ function save_result(click_type, languages){
   var col3 = click_type;
   var col4 = languages
   var today = new Date();
-  var col5 = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+"   ("+today.getFullYear()+"-"+today.getMonth()+"-"+today.getDay()+")";
+  var col5 = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds()+" ("+today.getFullYear()+"-"+(today.getMonth()+1)+"-"+today.getDay()+")";
   // $("#targetinput").html(decodeURI("undefined operation"));
   document.getElementById("resultstablebody").innerHTML="<tr><td>"+col1+"</td><td>"+col2+"</td><td>"+col3+"</td><td>"+col4+"</td><td>"+col5+"</td></tr>"+document.getElementById("resultstablebody").innerHTML;
 }
@@ -57,24 +61,24 @@ function save_result(click_type, languages){
 function show_alignment(source_text, target_text, align_list){
   var body_width = document.body.clientWidth/12*3.5;
     // $("#targetinput").html(decodeURI(body_width));
-  document.getElementById("alignment").innerHTML = "<h3><p>Alignment Matrix</p></h3><canvas id=\"myCanvas\" width=\""+String(body_width)+"\" height=\""+String(body_width)+"\"></canvas>";
+  document.getElementById("alignment").innerHTML = "<h3><p>Alignment Matrix</p></h3>"+"<a href=#alignment title=\"show large one\"><canvas id=\"myCanvas\" width=\""+String(body_width)+"\" height=\""+String(body_width)+"\"></canvas></a>";
 
 
   var source_length = source_text.length;
   var target_length = target_text.length;
   var step = 40;
   var font = 20;
-  // var x_offset = font * 9;
-  // var y_offset = font * 7;
-  body_width -= font*10;
+  var x_offset = font * 9;
+  var y_offset = font * 7;
+  body_width ;//-= font*10;
   if (target_length > source_length) {
     step = body_width/target_length;
   }
   else {
     step = body_width/source_length;
   }
-  if (step > 40) {
-    step = 40;
+  if (step > 45) {
+    step = 45;
   }
   var font = step/2.3;
   var x_offset = font * 9;
@@ -137,6 +141,75 @@ function show_alignment(source_text, target_text, align_list){
   cxt.stroke();
 }
 
+function show_large_alignment(source_text, target_text, align_list){
+  console.log("in show_large_alignment")
+  var body_width = document.body.clientWidth;
+  align_page = window.open('#algnment','')
+  align_page.document.write("<h1><p>Alignment Matrix</p></h1><canvas id=\"myCanvas\" width=\""+String(body_width)+"\" height=\""+String(body_width)+"\"></canvas></a>")
+  var source_length = source_text.length;
+  console.log(source_length)
+  var target_length = target_text.length;
+  var step = 40;
+  var font = 20;
+
+  body_width ;//-= font*10;
+  if (target_length > source_length) {
+    step = body_width/target_length;
+  }
+  else {
+    step = body_width/source_length;
+  }
+  if (step > 45) {
+    step = 45;
+  }
+  var font = step/2.3;
+  var x_offset = font * 9;
+  var y_offset = font * 7;
+  
+  for (var i=0; i<source_length; i++) {
+    var c= align_page.document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    // cxt.rotate(0)
+    cxt.moveTo(i*step+x_offset, y_offset);
+    cxt.moveTo(0,0);
+    cxt.textAlign = "left";
+    cxt.textBaseline="top";
+    cxt.font = String(font)+"px Arial";
+    cxt.translate(x_offset+(i+2.3)*step, -step*1.5);
+    cxt.rotate(-Math.PI/3);
+    cxt.fillText(decodeURI(source_text[i]), -y_offset/(1-1/3), 0);
+    cxt.rotate(Math.PI/3); 
+    cxt.translate(-(x_offset+(i+2.3)*step), step*1.5);
+  }
+  cxt.moveTo(source_length*step+x_offset, y_offset);
+
+  for (var j=0; j<target_length; j++){
+    var c= align_page.document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    cxt.font = String(font)+"px Arial";
+    cxt.textAlign = "left";
+    cxt.fillText(decodeURI(target_text[j]), (0.8-decodeURI(target_text[j]).length/17.)*x_offset, j*step+step/3+y_offset);
+  }
+  for (var j=0; j<target_length; j++){
+    for (var i=0; i<source_length; i++){
+      wa = align_list[j][i]
+      if (wa < 0.1) {
+        wa = 0.
+      }
+      color = parseInt(255*wa);
+      if (color < 16){
+        code = "0"+(color).toString(16);
+      }
+      else{
+        code = (color).toString(16);
+      }
+      cxt.fillStyle="#"+code+code+code;
+      cxt.fillRect(i*step+x_offset, j*step+y_offset, step, step);
+    }
+  }
+  cxt.stroke();
+  align_page.document.close()
+}
 
 $(function() {
   var languages = document.getElementById("languages");
@@ -152,20 +225,35 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
+      source_val = source_val.replace(/\?/,'\^')
+      console.log(source_val)
       source_val += '<sp>'+displayAddrs[0] + '<sp>' + languages.value
+      console.log(source_val)
   		xmlhttp.open("GET", "../nmt/" + source_val , true);
   		xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
   		xmlhttp.send();
   		xmlhttp.onreadystatechange=function() {
 		    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           data = xmlhttp.responseText;
+          // console.log(eval(data))
+
           var align_list = eval(data).slice(0,-1);
           var target_text = eval(data).slice(-2, -1)[0];
           var source_text = eval(data).slice(-1)[0];
-		      document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(' '));
+
+          // console.log(languages.value.slice(-2))
+          if (languages.value.slice(-2) == "zh") {
+            document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(''));
+          }
+          else{
+            document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(' '));
+          }
           save_result("NMT", languages.value);
           source_text.push("<end>");
           target_text.push("<end>");
+          global_align_list = align_list.valueOf();
+          global_target_text = target_text.valueOf();
+          global_source_text = source_text.valueOf();
           show_alignment(source_text, target_text, align_list);
 		    }
 		  }
@@ -182,6 +270,9 @@ $(function() {
       if (window.XMLHttpRequest) {
         xmlhttp=new XMLHttpRequest();
       }
+      source_val = source_val.replace(/\?/,'\^')
+      console.log(source_val)
+
       source_val += '<sp>'+displayAddrs[0] + '<sp>' + languages.value
       xmlhttp.open("GET", "../smt/" + source_val , true);
       xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -189,11 +280,20 @@ $(function() {
       xmlhttp.onreadystatechange=function() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           data = xmlhttp.responseText;
+          console.log(data)
           var align_list = eval(data).slice(0,-1);
           var target_text = eval(data).slice(-2, -1)[0];
           var source_text = eval(data).slice(-1)[0];
-          document.getElementById("targetinput").innerHTML=target_text.join(' ');
+          if (languages.value.slice(-2) == "zh") {
+            document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(''));
+          }
+          else{
+            document.getElementById("targetinput").innerHTML=decodeURI(target_text.join(' '));
+          }
           save_result("SMT", languages.value);
+          global_align_list = align_list.valueOf();
+          global_target_text = target_text.valueOf();
+          global_source_text = source_text.valueOf();
           show_alignment(source_text, target_text, align_list);
         }
       }
@@ -249,6 +349,11 @@ $(function() {
       });
     }
     // $("#targetinput").html(decodeURI(salt));
+  });
+  $("#alignment").on("click", function() {
+    console.log(global_source_text)
+    show_large_alignment(global_source_text, global_target_text, global_align_list)
+    // var test = align_page.document.getElementById("title").value
   });
 });
 
