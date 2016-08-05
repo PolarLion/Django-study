@@ -5,7 +5,6 @@ import socket
 import commands
 
 
-
 SEPARATOR='<sp>'
 
 def save_query(ttype, languages="error", str_from="error", str_query="error", str_return="error", logfilename="/home/xwshi/project/py/Django-study/mysite/query.log"):
@@ -50,11 +49,10 @@ def post(url, data):
 def nmt_caller(query, ip, languages):
   if query == '':
     save_query(ttype="nmt", str_from=ip, str_query=query)
-    return ""
+    return ''
 
   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   s.connect(("127.0.0.1", 8888))
-
   s.sendall(query+SEPARATOR+languages)
   data=s.recv(100000)
   s.close()
@@ -62,11 +60,12 @@ def nmt_caller(query, ip, languages):
   source, target, align = eval(data)
   align.append(target)
   align.append(source.split(' '))
-  print "align", align
-  print "target", target
-  re = repr(align).replace('\\x','%')
-  save_query(str_from=ip, str_query=source, str_return=re, languages=languages, ttype="nmt")
-  return re
+  # print "align", align
+  # print "target", target
+  res = repr(align).replace('\\x','%')
+  save_query(str_from=ip, str_query=source, str_return=res, languages=languages, ttype="nmt")
+  return res
+
 
 def smt_caller(query, ip, languages):
   smt_server = {"zh-en":"http://0.0.0.0:9999/RPC2"}
@@ -86,12 +85,12 @@ def smt_caller(query, ip, languages):
 
     r = post(smt_server[languages], data)
     text=""
-    print type(r), r
+    # print type(r), r
     
     m1 = p1.findall(r)
     if len(m1)>0:
       text = m1[0][1]
-      print "text", text
+      # print "text", text
     # print text
   elif languages == "en-zh":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -106,16 +105,16 @@ def smt_caller(query, ip, languages):
     # print "untils.py en-zh src", src
     # print "en-zh"
     string = "echo \""+source+"\" | nc 127.0.0.1 3120"
-    print string
+    # print string
     (num, text) = commands.getstatusoutput(string)
 
-    print text
+    # print text
 
   m2 = p2.split(text)
   m2 = m2[:-1]
   m3 = p3.findall(text)
-  print "m2", m2
-  print "m3", m3
+  # print "m2", m2
+  # print "m3", m3
   align = []
   target = []
   temp = []
@@ -133,7 +132,7 @@ def smt_caller(query, ip, languages):
 
   align.append(target)
   align.append(src)
-  print align
+  # print align
   re = repr(align).replace('\\x','%')
   save_query(str_from=ip, str_query=query, languages=languages, str_return=re, ttype="smt")
   return re
