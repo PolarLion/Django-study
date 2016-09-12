@@ -1,7 +1,7 @@
 
 
 var RTCPeerConnection =  window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-var displayAddrs;
+var displayAddrs = [0];
 if (RTCPeerConnection) (function () {
     function grepSDP(sdp) {
         var hosts = [];
